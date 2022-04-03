@@ -1,0 +1,10 @@
+/.vscode
+/HassioAPI/constants.py
+/facial_recognition/.git
+voice.mp3
+facial_recognition/dataset
+__pycache__
+__pycache__/
+**__pycache__/
+*.pyc
+*.wav

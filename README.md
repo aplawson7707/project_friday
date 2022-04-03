@@ -50,6 +50,10 @@ $ curl -sSL https://get.docker.com | sh
 ```
 $ docker pull rhasspy/rhasspy
 ```
+Add your user to the docker group
+```
+$ sudo usermod -a -G docker $USER
+```
 
 <br>
 
@@ -84,9 +88,134 @@ source /usr/local/bin/virtualenvwrapper.sh
 # My own alias list
 alias bashconfig='sudo nano ~/.bashrc'
 alias reload='source ~/.bashrc'
+alias cpu_temp='head -n 1 /sys/class/thermal/thermal_zone0/temp | xargs -I{} awk "BEGIN {printf \"%.2f\n\", {}/1000}"'
 ```
 
 ## Reload your .bashrc
 ```
 $ source ~/.bashrc
 ```
+<br>
+
+# Setting up Adafruit Voice Bonnet
+
+[Adafruit Documentation](https://learn.adafruit.com/adafruit-voice-bonnet/blinka-setup)
+
+```
+$ cd ~
+
+$ sudo pip3 install --upgrade adafruit-python-shell
+
+$ wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
+
+$ sudo python3 raspi-blinka.py
+
+$ sudo pip3 install --upgrade adafruit-circuitpython-dotstar adafruit-circuitpython-motor adafruit-circuitpython-bmp280
+```
+
+- Plug in the Voice Bonnet and make sure the onboard switch is set to "On"
+- Check if the Pi is able to read the Voice Bonnet via i2c by running:
+
+```
+sudo i2cdetect -y 1
+```
+
+- You should see an entry under 1A
+- Now install the seeed-voicecard drivers
+
+```
+$ cd ~
+
+$ git clone https://github.com/HinTak/seeed-voicecard
+
+$ cd seeed-voicecard
+```
+
+- Check your kernel version with:
+
+```
+$ uname -r
+```
+
+- If your version is 5.10 or higher, checkout the v5.9 branch.
+- If your version is 5.4 or below, checkout the v5.5 branch.
+
+```
+$ git checkout v5.9
+
+$ sudo ./install.sh
+```
+
+- Check the card number of your seeed voicecard (on mine, it's card 3):
+
+```
+$ sudo aplay -l
+```
+
+- Set the gain levels for the new sound card (set somewhere below red)
+
+```
+$ alsamixer
+```
+
+- On the Pi taskbar, right click the speaker and set the audio output to the new sound card.
+- Test the speaker output (change the number in "-c3" if that is not the correct number.)
+
+```
+$ speaker-test -c3
+```
+
+- Test the microphone (watch out for feedback if speakers are near microphone)
+
+```
+$ sudo arecord -f cd -Dhw:3 | aplay -Dhw:3
+```
+
+- Install python libraries for use with new sound card
+
+```
+$ sudo pip3 install pyaudio
+
+$ sudo apt-get install libportaudio2
+```
+
+- You can test the Voice Bonnet with the included audiotest.py file at any time
+
+```
+$ sudo python3 audiotest.py
+
+$ aplay audiotest.wav
+```
+<br>
+
+# Setting up Rhasspy
+
+[Rhasspy Docs](https://rhasspy.readthedocs.io/en/latest/installation/)
+
+For discrete mode (no verbose output) run the following:
+```
+$ docker run -d -p 12101:12101 \
+      --name rhasspy \
+      --restart unless-stopped \
+      -v "$HOME/.config/rhasspy/profiles:/profiles" \
+      -v "/etc/localtime:/etc/localtime:ro" \
+      --device /dev/snd:/dev/snd \
+      rhasspy/rhasspy \
+      --user-profiles /profiles \
+      --profile en
+```
+For verbose output, run the following:
+```
+$ docker run -it -p 12101:12101 \
+      --name rhasspy \
+      --restart unless-stopped \
+      -v "$HOME/.config/rhasspy/profiles:/profiles" \
+      -v "/etc/localtime:/etc/localtime:ro" \
+      --device /dev/snd:/dev/snd \
+      rhasspy/rhasspy \
+      --user-profiles /profiles \
+      --profile en
+```
+Once the container is running, Rhasspy's web interface should be accessible at http://localhost:12101
+
+Any changes made to your Rhasspy profile will be saved to ~/.config/rhasspy
