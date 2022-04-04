@@ -74,6 +74,8 @@ def getISSPostition():
         speak(f"The International Space Station is currently orbiting somewhere above {location}")
 
 def getSpaceEvent():
+    standbyMessage = "Please standby while I retrieve the requested information."
+    speak(standbyMessage)
     url = 'https://ll.thespacedevs.com/2.2.0/event/?limit=1'
     response = requests.get(url)
     raw_response = json.loads(response.text)
@@ -95,6 +97,6 @@ def getWikipediaPage(subject: str):
         summary_encoded = page.summary.encode('utf-8')
         summary_length = len(page.summary)
         speak(f"Researching {subject}. Please stand by.")
-        speak(summary_encoded[0:200])
+        speak(summary_encoded[0:500])
     else:
-        speak(f"I'm sorry sir. I could not find any information on {subject}")
+        speak(f"I apologize. I could not find any information on {subject}")
