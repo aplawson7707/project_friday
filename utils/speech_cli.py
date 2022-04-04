@@ -7,4 +7,4 @@ try:
         cmd=input("Say: ")
         speak(cmd)
 except KeyboardInterrupt:
-    speak("Exiting speech interface.")
+    speak("Deactivating speech interface.")
