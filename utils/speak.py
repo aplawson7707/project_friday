@@ -11,7 +11,6 @@ greetings = [
     "Pleasure to see you ",
     "It's very good to see you ",
     "Hello there ",
-    # "How do you do "
 ]
 
 random_greeting = random.randrange(len(greetings))
@@ -26,8 +25,4 @@ def speak(message):
         'Content-Type': 'text/plain'
     }
     requests.post(url, headers=headers, data=message)
-
-# speak(greetings[random_greeting] + " fellow human.")
-# speak("I can talk just like a person. Blah blah blah.")
-# speak("The human torch was denied a bank loan.")
-# speak("Your mother was a hamster and your father smelt of elderberries.")
+    
