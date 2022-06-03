@@ -5,7 +5,7 @@ from email.quoprimime import quote
 import requests
 import json
 from geopy.geocoders import Nominatim
-from speak import speak
+from utils.speak import speak
 import wikipediaapi
 
 def getCrypto():
@@ -53,7 +53,7 @@ def getPeopleInSpace():
     # for i in people:
     #     print(i)
 
-def getISSPostition():
+def getISSPosition():
     geolocator = Nominatim(user_agent="project_vex")
     url = 'http://api.open-notify.org/iss-now.json'
     response = requests.get(url)
