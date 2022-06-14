@@ -1,0 +1,1 @@
+/home/pi/.config/rhasspy/profiles/en/hassio.py
