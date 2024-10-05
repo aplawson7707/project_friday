@@ -17,12 +17,27 @@ CRGB leds[NUM_LEDS];
 
 static float pulseSpeed = 0.9;  // Larger value gives faster pulse.
 
-uint8_t hueA = 255;  // Start hue at valueMin.
-uint8_t satA = 250;  // Start saturation at valueMin.
-float valueMin = 180.0;  // Pulse minimum value (Should be less then valueMax).
+// Yellow: 65
+// Orange: 80
+// Red: 100
+// Hot Pink: 120
+// Violet: 140
+// Blue: 160
+// Dull Blue: 180
+// Sky Blue: 200
+// Aqua: 220
+// Pale Green: 240
+// Green: 260
+// Yellow Green: 280
+// Yellow: 320
 
-uint8_t hueB = 255;  // End hue at valueMax.
-uint8_t satB = 250;  // End saturation at valueMax.
+uint8_t hueA = 160;  // Start hue at valueMin. This sets the starting color.
+uint8_t satA = 250;  // Start saturation at valueMin. This sets the starting color saturation.
+float valueMin = 180.0;  // Pulse minimum value (Should be less then valueMax).
+//float valueMin = 240.0; // Uncomment to stop from pulsing
+
+uint8_t hueB = 160;  // End hue at valueMax. This sets the ending color.
+uint8_t satB = 250;  // End saturation at valueMax. This sets the ending color saturation.
 float valueMax = 240.0;  // Pulse maximum value (Should be larger then valueMin).
 
 uint8_t hue = hueA;  // Do Not Edit
