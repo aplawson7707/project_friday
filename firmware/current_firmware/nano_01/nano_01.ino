@@ -8,15 +8,16 @@
 //***************************************************************
 
 #include "FastLED.h"
-#define LED_TYPE    WS2812  //WS2811, WS2812, WS2812B
+#define RING_LED_TYPE    WS2812  //WS2811, WS2812, WS2812B
 #define COLOR_ORDER RGB
-#define DATA_PIN 8 
-#define NUM_LEDS 24
+#define RING_DATA_PIN 8 
+#define RING_NUM_LEDS 24
 #define BRIGHTNESS 100
-CRGB leds[NUM_LEDS];
+CRGB RING_LEDS[RING_NUM_LEDS];
 
 static float pulseSpeed = 0.9;  // Larger value gives faster pulse.
 
+// 24 LED NeoPixel Ring Color Map:
 // Yellow: 65
 // Orange: 80
 // Red: 100
@@ -51,7 +52,7 @@ static float delta = (valueMax - valueMin) / 2.35040238;  // Do Not Edit
 void setup(){
   Serial.begin(57600);  // Allows serial monitor output (check baud rate)
   delay(2000);  // Startup delay
-  FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
+  FastLED.addLeds<RING_LED_TYPE, RING_DATA_PIN, COLOR_ORDER>(RING_LEDS, RING_NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
   FastLED.clear();
   FastLED.show();
@@ -66,14 +67,14 @@ void loop(){
   hue = map(val, valueMin, valueMax, hueA, hueB);  // Map hue based on current val
   sat = map(val, valueMin, valueMax, satA, satB);  // Map sat based on current val
 
-  for (int i = 0; i < NUM_LEDS; i++) {
-    leds[i] = CHSV(hue, sat, val);
+  for (int i = 0; i < RING_NUM_LEDS; i++) {
+    RING_LEDS[i] = CHSV(hue, sat, val);
 
     // You can experiment with commenting out these dim8_video lines
     // to get a different sort of look.
-    leds[i].r = dim8_video(leds[i].r);
-    leds[i].g = dim8_video(leds[i].g);
-    leds[i].b = dim8_video(leds[i].b);
+    RING_LEDS[i].r = dim8_video(RING_LEDS[i].r);
+    RING_LEDS[i].g = dim8_video(RING_LEDS[i].g);
+    RING_LEDS[i].b = dim8_video(RING_LEDS[i].b);
   }
 
   FastLED.show();
