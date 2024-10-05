@@ -11,13 +11,14 @@
 #define RING_LED_TYPE    WS2812  //WS2811, WS2812, WS2812B
 #define COLOR_ORDER RGB
 #define RING_DATA_PIN 8 
-#define RING_NUM_LEDS 24
+#define RING_NUM_LEDS 24 // Uncomment for 24 LED NeoPixel Ring
+//#define RING_NUM_LEDS 35 // Uncomment for 35 LED NeoPixel Ring
 #define BRIGHTNESS 100
 CRGB RING_LEDS[RING_NUM_LEDS];
 
 static float pulseSpeed = 0.9;  // Larger value gives faster pulse.
 
-// 24 LED NeoPixel Ring Color Map:
+// 24 & 35 LED NeoPixel Ring Color Map:
 // Yellow: 65
 // Orange: 80
 // Red: 100
@@ -32,12 +33,12 @@ static float pulseSpeed = 0.9;  // Larger value gives faster pulse.
 // Yellow Green: 280
 // Yellow: 320
 
-uint8_t hueA = 160;  // Start hue at valueMin. This sets the starting color.
+uint8_t hueA = 80;  // Start hue at valueMin. This sets the starting color.
 uint8_t satA = 250;  // Start saturation at valueMin. This sets the starting color saturation.
 float valueMin = 180.0;  // Pulse minimum value (Should be less then valueMax).
 //float valueMin = 240.0; // Uncomment to stop from pulsing
 
-uint8_t hueB = 160;  // End hue at valueMax. This sets the ending color.
+uint8_t hueB = 80;  // End hue at valueMax. This sets the ending color.
 uint8_t satB = 250;  // End saturation at valueMax. This sets the ending color saturation.
 float valueMax = 240.0;  // Pulse maximum value (Should be larger then valueMin).
 
@@ -56,7 +57,14 @@ void setup(){
   FastLED.setBrightness(BRIGHTNESS);
   FastLED.clear();
   FastLED.show();
-  Serial.println("Setup done.  \n");
+  Serial.println("////////////////////////////");
+  Serial.println("//////////////////////////// \n");
+  Serial.println("Project: Friday");
+  Serial.println("Device: nano_01");
+  Serial.println("Firmware: nano_01.ino");
+  Serial.println("Setup complete. \n");
+  Serial.println("////////////////////////////");
+  Serial.println("////////////////////////////");
 }
 
 
