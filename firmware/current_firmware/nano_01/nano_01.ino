@@ -8,17 +8,28 @@
 //***************************************************************
 
 #include "FastLED.h"
+
 #define RING_LED_TYPE    WS2812  //WS2811, WS2812, WS2812B
-#define COLOR_ORDER RGB
-#define RING_DATA_PIN 8 
+#define STRIP_LED_TYPE WS2812B
+
+#define RING_COLOR_ORDER RGB
+#define STRIP_COLOR_ORDER RGB
+
+#define RING_DATA_PIN 8
+#define LEFT_STRIP_DATA_PIN 7
+#define RIGHT_STRIP_DATA_PIN 6
+
 #define RING_NUM_LEDS 24 // Uncomment for 24 LED NeoPixel Ring
 //#define RING_NUM_LEDS 35 // Uncomment for 35 LED NeoPixel Ring
+#define STRIP_NUM_LEDS 8
+
 #define BRIGHTNESS 100
 CRGB RING_LEDS[RING_NUM_LEDS];
+CRGB STRIP_LEDS[STRIP_NUM_LEDS];
 
 static float pulseSpeed = 0.9;  // Larger value gives faster pulse.
 
-// 24 & 35 LED NeoPixel Ring Color Map:
+// NeoPixel Color Map (Color Mode must be "RGB"):
 // Yellow: 65
 // Orange: 80
 // Red: 100
@@ -33,12 +44,12 @@ static float pulseSpeed = 0.9;  // Larger value gives faster pulse.
 // Yellow Green: 280
 // Yellow: 320
 
-uint8_t hueA = 80;  // Start hue at valueMin. This sets the starting color.
+uint8_t hueA = 120;  // Start hue at valueMin. This sets the starting color.
 uint8_t satA = 250;  // Start saturation at valueMin. This sets the starting color saturation.
 float valueMin = 180.0;  // Pulse minimum value (Should be less then valueMax).
 //float valueMin = 240.0; // Uncomment to stop from pulsing
 
-uint8_t hueB = 80;  // End hue at valueMax. This sets the ending color.
+uint8_t hueB = 120;  // End hue at valueMax. This sets the ending color.
 uint8_t satB = 250;  // End saturation at valueMax. This sets the ending color saturation.
 float valueMax = 240.0;  // Pulse maximum value (Should be larger then valueMin).
 
@@ -53,7 +64,9 @@ static float delta = (valueMax - valueMin) / 2.35040238;  // Do Not Edit
 void setup(){
   Serial.begin(57600);  // Allows serial monitor output (check baud rate)
   delay(2000);  // Startup delay
-  FastLED.addLeds<RING_LED_TYPE, RING_DATA_PIN, COLOR_ORDER>(RING_LEDS, RING_NUM_LEDS);
+  FastLED.addLeds<RING_LED_TYPE, RING_DATA_PIN, RING_COLOR_ORDER>(RING_LEDS, RING_NUM_LEDS);
+  FastLED.addLeds<STRIP_LED_TYPE, LEFT_STRIP_DATA_PIN, STRIP_COLOR_ORDER>(STRIP_LEDS, STRIP_NUM_LEDS);
+  FastLED.addLeds<STRIP_LED_TYPE, RIGHT_STRIP_DATA_PIN, STRIP_COLOR_ORDER>(STRIP_LEDS, STRIP_NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
   FastLED.clear();
   FastLED.show();
@@ -77,19 +90,26 @@ void loop(){
 
   for (int i = 0; i < RING_NUM_LEDS; i++) {
     RING_LEDS[i] = CHSV(hue, sat, val);
+    STRIP_LEDS[i] = CHSV(hue, sat, val);
 
     // You can experiment with commenting out these dim8_video lines
     // to get a different sort of look.
     RING_LEDS[i].r = dim8_video(RING_LEDS[i].r);
     RING_LEDS[i].g = dim8_video(RING_LEDS[i].g);
     RING_LEDS[i].b = dim8_video(RING_LEDS[i].b);
+
+    // You can experiment with commenting out these dim8_video lines
+    // to get a different sort of look.
+    STRIP_LEDS[i].r = dim8_video(STRIP_LEDS[i].r);
+    STRIP_LEDS[i].g = dim8_video(STRIP_LEDS[i].g);
+    STRIP_LEDS[i].b = dim8_video(STRIP_LEDS[i].b);
   }
 
   FastLED.show();
-  if (Serial.available() > 0) {
-    int msg = Serial.read() - '0';
-    Serial.print("Command received: ");
-    Serial.println(msg);
-  };
+//  if (Serial.available() > 0) {
+//    int msg = Serial.read() - '0';
+//    Serial.print("Command received: ");
+//    Serial.println(msg);
+//  };
    
 } // end_main_loop
