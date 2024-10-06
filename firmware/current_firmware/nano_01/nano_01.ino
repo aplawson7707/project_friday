@@ -1,10 +1,8 @@
 //***************************************************************
-// Breathing effect
-// Color shifts from hueA to hueB as it pulses.
-//
-// Set A and B to the same hue if you don't want the color to
-// change.  Saturation for the high and low can also be set.
-//
+// Project Friday
+// Device Type: Arduino Nano
+// Device Name: nano_01
+// General Description: Lighting Control
 //***************************************************************
 
 #include "FastLED.h"
@@ -29,6 +27,8 @@ CRGB STRIP_LEDS[STRIP_NUM_LEDS];
 
 static float pulseSpeed = 0.9;  // Larger value gives faster pulse.
 
+#define POT_PIN A0
+
 // NeoPixel Color Map (Color Mode must be "RGB"):
 // Yellow: 65
 // Orange: 80
@@ -44,20 +44,13 @@ static float pulseSpeed = 0.9;  // Larger value gives faster pulse.
 // Yellow Green: 280
 // Yellow: 320
 
-uint8_t hueA = 120;  // Start hue at valueMin. This sets the starting color.
-uint8_t satA = 250;  // Start saturation at valueMin. This sets the starting color saturation.
-float valueMin = 180.0;  // Pulse minimum value (Should be less then valueMax).
-//float valueMin = 240.0; // Uncomment to stop from pulsing
+uint8_t sat = 250; // Do Not Edit
 
-uint8_t hueB = 120;  // End hue at valueMax. This sets the ending color.
-uint8_t satB = 250;  // End saturation at valueMax. This sets the ending color saturation.
-float valueMax = 240.0;  // Pulse maximum value (Should be larger then valueMin).
+float pulseValueMin = 180.0;  // Pulse minimum value (Should be less then pulseValueMax).
+float pulseValueMax = 240.0;  // Pulse maximum value (Should be larger then pulseValueMin).
 
-uint8_t hue = hueA;  // Do Not Edit
-uint8_t sat = satA;  // Do Not Edit
-float val = valueMin;  // Do Not Edit
-uint8_t hueDelta = hueA - hueB;  // Do Not Edit
-static float delta = (valueMax - valueMin) / 2.35040238;  // Do Not Edit
+float val = pulseValueMin;  // Do Not Edit
+static float pulseValueDelta = (pulseValueMax - pulseValueMin) / 2.35040238;  // Do Not Edit
 
 
 //---------------------------------------------------------------
@@ -83,10 +76,13 @@ void setup(){
 
 //---------------------------------------------------------------
 void loop(){
-  float dV = ((exp(sin(pulseSpeed * millis()/2000.0*PI)) -0.36787944) * delta);
-  val = valueMin + dV;
-  hue = map(val, valueMin, valueMax, hueA, hueB);  // Map hue based on current val
-  sat = map(val, valueMin, valueMax, satA, satB);  // Map sat based on current val
+  int potValue = analogRead(POT_PIN);
+  int hue = map(potValue, 0, 1023, 65, 320);
+
+  Serial.println(hue);
+  
+  float dV = ((exp(sin(pulseSpeed * millis()/2000.0*PI)) -0.36787944) * pulseValueDelta);
+  val = pulseValueMin + dV;
 
   for (int i = 0; i < RING_NUM_LEDS; i++) {
     RING_LEDS[i] = CHSV(hue, sat, val);
@@ -106,10 +102,5 @@ void loop(){
   }
 
   FastLED.show();
-//  if (Serial.available() > 0) {
-//    int msg = Serial.read() - '0';
-//    Serial.print("Command received: ");
-//    Serial.println(msg);
-//  };
    
 } // end_main_loop
