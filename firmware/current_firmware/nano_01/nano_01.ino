@@ -52,6 +52,10 @@ float pulseValueMax = 240.0;  // Pulse maximum value (Should be larger then puls
 float val = pulseValueMin;  // Do Not Edit
 static float pulseValueDelta = (pulseValueMax - pulseValueMin) / 2.35040238;  // Do Not Edit
 
+// Declare variables for low-pass filtering
+float smoothedPotValue = 0.0; // Holds the smoothed value of the potentiometer reading
+float alpha = 0.1; // Smoothing factor (0 < alpha < 1). A lower value smooths more
+
 
 //---------------------------------------------------------------
 void setup(){
@@ -76,14 +80,23 @@ void setup(){
 
 //---------------------------------------------------------------
 void loop(){
+  // Read the raw potentiometer value
   int potValue = analogRead(POT_PIN);
-  int hue = map(potValue, 0, 1023, 65, 320);
 
+  // Apply the low-pass filter (exponential smoothing)
+  smoothedPotValue = (alpha * potValue) + ((1 - alpha) * smoothedPotValue);
+
+  // Map the smoothed potentiometer value to the hue range (65 to 320)
+  int hue = map(smoothedPotValue, 0, 1023, 65, 320);
+
+  // Print the smoothed hue value to Serial Monitor
   Serial.println(hue);
-  
+
+  // Pulsing effect on value
   float dV = ((exp(sin(pulseSpeed * millis()/2000.0*PI)) -0.36787944) * pulseValueDelta);
   val = pulseValueMin + dV;
 
+  // Apply the hue value to the LEDs
   for (int i = 0; i < RING_NUM_LEDS; i++) {
     RING_LEDS[i] = CHSV(hue, sat, val);
     STRIP_LEDS[i] = CHSV(hue, sat, val);
@@ -94,13 +107,12 @@ void loop(){
     RING_LEDS[i].g = dim8_video(RING_LEDS[i].g);
     RING_LEDS[i].b = dim8_video(RING_LEDS[i].b);
 
-    // You can experiment with commenting out these dim8_video lines
-    // to get a different sort of look.
     STRIP_LEDS[i].r = dim8_video(STRIP_LEDS[i].r);
     STRIP_LEDS[i].g = dim8_video(STRIP_LEDS[i].g);
     STRIP_LEDS[i].b = dim8_video(STRIP_LEDS[i].b);
   }
 
+  // Show the updated LED colors
   FastLED.show();
    
 } // end_main_loop
