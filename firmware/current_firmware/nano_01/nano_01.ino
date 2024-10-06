@@ -57,7 +57,7 @@ static float pulseValueDelta = (pulseValueMax - pulseValueMin) / 2.35040238;  //
 // Declare variables for low-pass filtering
 float smoothedPotValueHue = 0.0; // Holds the smoothed value of the hue potentiometer reading.
 float smoothedPotValueBrightness = 0.0; // Holds the smoothed value of the brightness potentiometer reading.
-float alpha = 0.1; // Smoothing factor (0 < alpha < 1). Adjust lower for more smoothness.
+float alpha = 0.05; // Smoothing factor (0 < alpha < 1). Adjust lower for more smoothness.
 
 
 //---------------------------------------------------------------
