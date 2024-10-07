@@ -17,8 +17,8 @@
 #define LEFT_STRIP_DATA_PIN 7
 #define RIGHT_STRIP_DATA_PIN 6
 
-#define RING_NUM_LEDS 24 // Uncomment for 24 LED NeoPixel Ring
-//#define RING_NUM_LEDS 35 // Uncomment for 35 LED NeoPixel Ring
+//#define RING_NUM_LEDS 24 // Uncomment for 24 LED NeoPixel Ring
+#define RING_NUM_LEDS 35 // Uncomment for 35 LED NeoPixel Ring
 #define STRIP_NUM_LEDS 8
 
 #define BRIGHTNESS 100
@@ -106,10 +106,10 @@ void loop(){
   FastLED.setBrightness(brightness);
 
   // Print the smoothed hue and brightness values to Serial Monitor
-  Serial.print("Hue: ");
-  Serial.print(hue);
-  Serial.print("\t Brightness: ");
-  Serial.println(brightness);
+//  Serial.print("Hue: ");
+//  Serial.print(hue);
+//  Serial.print("\t Brightness: ");
+//  Serial.println(brightness);
 
   // Pulsing effect on value
   float dV = ((exp(sin(pulseSpeed * millis()/2000.0*PI)) -0.36787944) * pulseValueDelta);
